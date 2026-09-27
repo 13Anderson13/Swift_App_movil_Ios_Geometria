@@ -81,7 +81,7 @@ struct Login: View {
             }
         }
         .background(
-            Image("fondo")
+            Image("fondo1")
                 .resizable()
                 .scaledToFill()
                 .ignoresSafeArea()

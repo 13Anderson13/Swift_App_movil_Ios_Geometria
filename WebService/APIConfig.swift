@@ -7,5 +7,5 @@
 import Foundation
 
 struct APIConfig{
-    static let baseURL = "http://192.168.1.31:5267/api"
+    static let baseURL = "http://192.168.1.195:5267/api"
 }
