@@ -37,9 +37,9 @@ struct Login: View {
                            height: geo.size.height)
                     .clipped()
                     .overlay(Color.black.opacity(0.48))
-                    .ignoresSafeArea()
+                    
             }
-
+            .ignoresSafeArea() //se bajo este ignoresafearea estaba en fondo personalizado por que ponia un espacio en gris
             // Contenido principal
             ScrollView {
                 VStack(spacing: 0) {
