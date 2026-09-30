@@ -10,7 +10,7 @@ import SwiftUI
 struct Login: View {
     @State private var email = ""
     @State private var password = ""
-    @State private var mensajeError = "" //Mensaje ue veremos en caso de que la peticion falle
+    @State private var mensajeError = "" //Mensaje que veremos en caso de que la peticion falle
     @State private var cargando = false //Variable que funciona como loader del boton continuar
     @State private var usuarioLogueado: vConsultarUsuarios? = nil //La usamos para guardar el mapeo que regresa del sp
 
@@ -106,6 +106,7 @@ struct Login: View {
                 self.mensajeError = error
             } else if let usuario = usuario {
                 self.usuarioLogueado = usuario
+                
             }
         }
     }
