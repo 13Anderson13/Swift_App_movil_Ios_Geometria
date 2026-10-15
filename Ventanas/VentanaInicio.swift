@@ -12,18 +12,28 @@ struct VentanaInicio : View {
     // Variables de estado para almacenar la lista que viene del eb service
     @State private var minijuegos: [vConsultarMinijuego] = []
     @State private var mensajeError: String? = nil
+    @State private var minijuegoSeleccionado: vConsultarMinijuego?
+
     
     var body : some View {
         ZStack{
             NavigationView(){
                 ScrollView{
+                    Text("Selecciona un o minijuego de la lista para comenzar con las actividades disponibles")
+                        .font(.subheadline)
                         //Aca mandamos a llamar el endpoint de consultar menu (o minijuegos)
                         ForEach(minijuegos, id: \.id_minijuego){ item in
                             menudinamico(
                                 nombre: item.nombre_minijuego ?? "Proximamente",
                                 icono: item.icono ?? "star.fill",
                                 identificador: Int32(item.id_minijuego),
-                                descripcion: item.descripcion ?? "Sin descripcion"
+                                descripcion: item.descripcion ?? "Sin descripcion",
+                                ventana: item.ventana,
+                                accion : {
+                                    minijuegoSeleccionado = item
+                                    VentanaIntermediario.obtenerVentana(item.ventana)
+
+                                }
                             )
                         }
                 }
@@ -36,6 +46,12 @@ struct VentanaInicio : View {
                         .opacity(0.2)
                     )
             }
+            .sheet(item: $minijuegoSeleccionado) { item in
+                      
+                      VentanaIntermediario.obtenerVentana(
+                          item.ventana
+                      )
+                  }
         }
         
         .onAppear{

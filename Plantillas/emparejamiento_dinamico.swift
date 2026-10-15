@@ -14,7 +14,7 @@ struct Elemento: Identifiable{
     let targetPosition: CGPoint   // Dónde debe encajar (la sombra)
     var initialPosition: CGPoint  // Dónde empieza la figura para arrastrar
     var currentPosition: CGPoint  // Posición dinámica actual
-    var isMatched: Bool = false   // Estado para saber si ya lo colocó bien
+    var isMatched: Bool = false   // Estado para saber si ya lo colocó bien 
 }
 
 struct parejas: View{
@@ -26,7 +26,7 @@ struct parejas: View{
     @State private var draggedID: UUID? = nil
     @State private var dragOffset: CGSize = .zero
     
-    // Variables para los datos que irán a tu tabla Puntajes
+    // Variables para los datos que irán a tu tabla Puntaje
     @State private var errorCount: Int = 0
     @State private var gameCompleted: Bool = false
     
