@@ -9,76 +9,38 @@
 import SwiftUI
 
 struct VentanaMatchShadow : View{
+    var IdMinijuego: Int
     var body : some View {
-        VStack{
-            Text("Relacion de figuras")
-                .font(.title)
-                .bold()
-                .foregroundColor(Color.black)
-            
-            /*===================Ventana de descripcion (No interactiva) ===================*/
-            
-            HStack(spacing: 16) {
-                // Ícono principal con fondo circular
-                Image(systemName: "heart")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 48, height: 48)
-                    .foregroundStyle(
-                        LinearGradient(
-                            colors: [
-                                Color(red: 0.98, green: 0.2, blue: 0.45), // Rosa / Magenta
-                                Color(red: 0.95, green: 0.35, blue: 0.15), // Rojo
-                                Color(red: 0.99, green: 0.6, blue: 0.15)   // Naranja
-                            ],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
+        NavigationStack{
+            VStack{
                 
-                // Textos: Nombre y Número
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Descripcion")
-                        .font(.headline)
-                        .foregroundColor(.primary)
-                    
-                    Text("Junta las figuras con su respectiva sombra para completar los niveles")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                }
+                /*===================Ventana de descripcion (No interactiva) ===================*/
                 
-                Spacer()
-            }
-            .padding()
-            .background(Color(.systemBackground))
-            .cornerRadius(12)
-            .overlay(
-                RoundedRectangle(cornerRadius: 12)
-                    .stroke(Color.gray.opacity(0.3), lineWidth: 1)
-            )
-            .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
-            .padding(.horizontal)
-            
-            /*===================Ventana de practica ===================*/
-            
-            Button {
-                print("Hola mundo")
-            }label : {
                 HStack(spacing: 16) {
                     // Ícono principal con fondo circular
-                    Image(systemName: "filemenu.and.cursorarrow.rtl")
+                    Image(systemName: "heart")
                         .resizable()
                         .scaledToFit()
                         .frame(width: 48, height: 48)
-            
+                        .foregroundStyle(
+                            LinearGradient(
+                                colors: [
+                                    Color(red: 0.98, green: 0.2, blue: 0.45), // Rosa / Magenta
+                                    Color(red: 0.95, green: 0.35, blue: 0.15), // Rojo
+                                    Color(red: 0.99, green: 0.6, blue: 0.15)   // Naranja
+                                ],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
                     
                     // Textos: Nombre y Número
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("Practica / Entrenamiento")
+                        Text("Descripcion")
                             .font(.headline)
                             .foregroundColor(.primary)
                         
-                        Text("Realiacemos una practica para entender el concepto")
+                        Text("Junta las figuras con su respectiva sombra para completar los niveles")
                             .font(.subheadline)
                             .foregroundColor(.secondary)
                     }
@@ -94,94 +56,127 @@ struct VentanaMatchShadow : View{
                 )
                 .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
                 .padding(.horizontal)
-            }
-            .buttonStyle(.plain)
-            
-            /*===================Boton para Empezar el minijuego ===================*/
-            Spacer()
-            
-            Button {
-                print("Hola mundo")
-            }label : {
-                HStack(spacing: 16) {
-                    // Textos: Nombre y Número
-                    VStack(alignment: .center, spacing: 4) {
-                        HStack{
-                            Image(systemName: "stopwatch")
-                            Text("Contra Reloj")
-                        }.font(.headline)
-                            .foregroundColor(.white)
+                
+                /*===================Ventana de practica ===================*/
+                
+                Button {
+                    print("Hola mundo")
+                }label : {
+                    HStack(spacing: 16) {
+                        // Ícono principal con fondo circular
+                        Image(systemName: "filemenu.and.cursorarrow.rtl")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 48, height: 48)
+                        
+                        
+                        // Textos: Nombre y Número
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("Practica / Entrenamiento")
+                                .font(.headline)
+                                .foregroundColor(.primary)
+                            
+                            Text("Realiacemos una practica para entender el concepto")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                        }
+                        
+                        Spacer()
                     }
-                }
-                .frame(maxWidth: .infinity)
-                .padding()
-                .background(
-                    LinearGradient(
-                        colors: [.red, .pink],
-                        startPoint: .leading,
-                        endPoint: .trailing
+                    .padding()
+                    .background(Color(.systemBackground))
+                    .cornerRadius(12)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(Color.gray.opacity(0.3), lineWidth: 1)
                     )
-                )
-
-                .cornerRadius(12)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 12)
-                        .stroke(Color.gray.opacity(0.3), lineWidth: 1)
-                )
-                .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
-                .padding(.horizontal)
+                    .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
+                    .padding(.horizontal)
+                }
+                .buttonStyle(.plain)
                 
+                /*===================Boton para Empezar el minijuego ===================*/
+                Spacer()
                 
-            }
-            .buttonStyle(.plain)
-            
-            /*===================Boton para empezar el minijuego ===================*/
-            
-            Button {
-                print("Hola mundo")
-            }label : {
-                HStack(spacing: 16) {
-                    // Textos: Nombre y Número
-                    VStack(alignment: .center, spacing: 4) {
-                        HStack{
-                            Image(systemName: "play.fill")
-                            Text("Jugar")
-                        }.font(.headline)
-                            .foregroundColor(.white)
+                Button {
+                    print("Hola mundo")
+                }label : {
+                    HStack(spacing: 16) {
+                        // Textos: Nombre y Número
+                        VStack(alignment: .center, spacing: 4) {
+                            HStack{
+                                Image(systemName: "stopwatch")
+                                Text("Contra Reloj")
+                            }.font(.headline)
+                                .foregroundColor(.white)
+                        }
                     }
-                }
-                .frame(maxWidth: .infinity)
-                .padding()
-                .background(
-                    LinearGradient(
-                        colors: [.blue, .purple],
-                        startPoint: .leading,
-                        endPoint: .trailing
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(
+                        LinearGradient(
+                            colors: [.red, .pink],
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
                     )
-                )
-
-                .cornerRadius(12)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 12)
-                        .stroke(Color.gray.opacity(0.3), lineWidth: 1)
-                )
-                .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
-                .padding(.horizontal)
+                    
+                    .cornerRadius(12)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+                    )
+                    .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
+                    .padding(.horizontal)
+                    
+                    
+                }
+                .buttonStyle(.plain)
                 
-            }
-            .buttonStyle(.plain)
-            
-            
-        }.background(
-            Image("fondo1")
-                .resizable()
-                .scaledToFill()
-                .ignoresSafeArea()
-                .opacity(0.2)
-        )
+                /*===================Boton para empezar el selector de minijuegos ===================*/
+                
+                NavigationLink(destination: SelectorNivelMatch(IdMinijuego: IdMinijuego)) {
+                    HStack(spacing: 16) {
+                        VStack(alignment: .center, spacing: 4) {
+                            HStack {
+                                Image(systemName: "figure.run")
+                                Text("Niveles")
+                            }
+                            .font(.headline)
+                            .foregroundColor(.white)
+                        }
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(
+                        LinearGradient(
+                            colors: [.blue, .purple],
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
+                    )
+                    .cornerRadius(12)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+                    )
+                    .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
+                    .padding(.horizontal)
+                }
+                .buttonStyle(.plain)
+                .navigationTitle("Relacion de figuras")
+                
+            }.background(
+                Image("fondo1")
+                    .resizable()
+                    .scaledToFill()
+                    .ignoresSafeArea()
+                    .opacity(0.2)
+            )
+        }
     }
 }
 #Preview {
-    VentanaMatchShadow()
+    VentanaMatchShadow(IdMinijuego : 1)
 }
 

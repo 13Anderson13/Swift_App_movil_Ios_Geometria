@@ -21,6 +21,7 @@ struct VentanaInicio : View {
                 ScrollView{
                     Text("Selecciona un o minijuego de la lista para comenzar con las actividades disponibles")
                         .font(.subheadline)
+                        .padding()
                         //Aca mandamos a llamar el endpoint de consultar menu (o minijuegos)
                         ForEach(minijuegos, id: \.id_minijuego){ item in
                             menudinamico(
@@ -31,8 +32,7 @@ struct VentanaInicio : View {
                                 ventana: item.ventana,
                                 accion : {
                                     minijuegoSeleccionado = item
-                                    VentanaIntermediario.obtenerVentana(item.ventana)
-
+                                    VentanaIntermediario.obtenerVentana(item.ventana,IdMinijuego: Int(item.id_minijuego))
                                 }
                             )
                         }
@@ -49,11 +49,11 @@ struct VentanaInicio : View {
             .sheet(item: $minijuegoSeleccionado) { item in
                       
                       VentanaIntermediario.obtenerVentana(
-                          item.ventana
+                          item.ventana,
+                          IdMinijuego: Int(item.id_minijuego)
                       )
                   }
         }
-        
         .onAppear{
             obtenerMenu()
         }

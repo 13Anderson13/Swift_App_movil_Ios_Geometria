@@ -7,129 +7,148 @@
 
 import SwiftUI
 
-struct Elemento: Identifiable{
+//Esta es una clase interna que utklizaremos para que la logica de arraste funcione
+// Modelo interno que usa la vista para la lógica de arrastre
+struct ElementoJuego: Identifiable {
     let id = UUID()
-    let name: String
+    let nombre: String
     let systemImage: String
-    let targetPosition: CGPoint   // Dónde debe encajar (la sombra)
-    var initialPosition: CGPoint  // Dónde empieza la figura para arrastrar
-    var currentPosition: CGPoint  // Posición dinámica actual
-    var isMatched: Bool = false   // Estado para saber si ya lo colocó bien 
+    let targetPosition: CGPoint   // Sombra (Destino)
+    var initialPosition: CGPoint  // Posición inicial de la ficha
+    var currentPosition: CGPoint  // Posición dinámica mientras se arrastra
+    var isMatched: Bool = false   // Estado de acierto
 }
 
-struct parejas: View{
-    @State private var elements: [Elemento] = [
-        Elemento(name: "Estrella", systemImage: "star.fill", targetPosition: CGPoint(x: 200, y: 300), initialPosition: CGPoint(x: 100, y: 650), currentPosition: CGPoint(x: 100, y: 650)),
-        Elemento(name: "Corazón", systemImage: "heart.fill", targetPosition: CGPoint(x: 200, y: 450), initialPosition: CGPoint(x: 300, y: 650), currentPosition: CGPoint(x: 300, y: 650))
-    ]
+struct ParejasView: View {
+    // Parámetros que recibe desde el selector de niveles
+    var idNivel: Int
+    var numeroNivel: Int
+    
+    @State private var elements: [ElementoJuego] = []
+    @State private var isLoading: Bool = true
+    @State private var errorMessage: String? = nil
+    @State private var gameCompleted: Bool = false
     
     @State private var draggedID: UUID? = nil
     @State private var dragOffset: CGSize = .zero
-    
-    // Variables para los datos que irán a tu tabla Puntaje
-    @State private var errorCount: Int = 0
-    @State private var gameCompleted: Bool = false
-    
-    
+
     var body: some View {
         ZStack {
-                    Color(.systemGroupedBackground).ignoresSafeArea()
+            Color(.systemGroupedBackground).ignoresSafeArea()
 
-                    // Panel superior con estadísticas (para Puntajes)
-                    VStack {
-                        HStack {
-                            Text("Errores: \(errorCount)")
-                                .font(.headline)
-                                .foregroundColor(.red)
-                            Spacer()
-                        }
-                        .padding()
-                        Spacer()
-                    }
-
-                    // 1. Dibujar las Sombras (Destinos fijos)
-                    ForEach(elements) { element in
-                        Image(systemName: element.systemImage)
-                            .font(.system(size: 70))
-                            .foregroundColor(.black.opacity(0.2))
-                            .position(element.targetPosition)
-                    }
-
-                    // 2. Dibujar las Figuras móviles
-                    ForEach($elements) { $element in
-                        Image(systemName: element.systemImage)
-                            .font(.system(size: 70))
-                            .foregroundColor(element.isMatched ? .green : .blue)
-                            .shadow(radius: 3)
-                            .position(element.currentPosition)
-                            .offset(draggedID == element.id ? dragOffset : .zero)
-                            // Si ya hizo match, desactivamos el gesto para que no se mueva más
-                            .disabled(element.isMatched)
-                            .gesture(
-                                DragGesture()
-                                    .onChanged { value in
-                                        guard !element.isMatched else { return }
-                                        draggedID = element.id
-                                        dragOffset = value.translation
-                                    }
-                                    .onEnded { value in
-                                        guard !element.isMatched else { return }
-                                        
-                                        // Calcular posición real donde se soltó
-                                        let finalX = element.initialPosition.x + value.translation.width
-                                        let finalY = element.initialPosition.y + value.translation.height
-                                        
-                                        // Calcular distancia a la sombra
-                                        let distance = hypot(finalX - element.targetPosition.x, finalY - element.targetPosition.y)
-                                        
-                                        // Margen de tolerancia (ej. 50 puntos)
-                                        if distance < 50 {
-                                            // ¡Acierto! Imantamos a la posición exacta de la sombra
-                                            element.currentPosition = element.targetPosition
-                                            element.initialPosition = element.targetPosition
-                                            element.isMatched = true
-                                            
-                                            // Verificar si completó todos los elementos del nivel
-                                            checkIfGameIsFinished()
-                                        } else {
-                                            // ¡Error! Sumamos un fallo y la figura regresa a su origen
-                                            errorCount += 1
-                                            // Aquí la figura simplemente se queda en su offset original al soltar el drag
-                                        }
-                                        
-                                        draggedID = nil
-                                        dragOffset = .zero
-                                    }
-                            )
-                    }
-                    
-                    // Alerta de nivel completado
-                    if gameCompleted {
-                        VStack {
-                            Text("¡Nivel Completado!")
-                                .font(.largeTitle)
-                                .bold()
-                                .foregroundColor(.white)
-                            Text("Total de errores: \(errorCount)")
-                                .foregroundColor(.white)
-                        }
-                        .padding()
-                        .background(Color.black.opacity(0.8))
-                        .cornerRadius(12)
-                    }
+            if isLoading {
+                ProgressView("Cargando nivel...")
+            } else if let errorMessage = errorMessage {
+                Text("Error: \(errorMessage)")
+                    .foregroundColor(.red)
+            } else {
+                // 1. Dibujar las Sombras (Destinos fijos)
+                ForEach(elements) { element in
+                    Image(systemName: element.systemImage)
+                        .font(.system(size: 70))
+                        .foregroundColor(.black.opacity(0.2))
+                        .position(element.targetPosition)
                 }
-    }
-    func checkIfGameIsFinished() {
-            if elements.allSatisfy({ $0.isMatched }) {
-                gameCompleted = true
-                // En este punto, con los datos de 'errorCount' y el tiempo transcurrido,
-                // armarías el objeto JSON para enviarlo mediante el Web Service de C# a tu tabla 'Puntajes'.
+
+                // 2. Dibujar las Figuras móviles
+                ForEach($elements) { $element in
+                    Image(systemName: element.systemImage)
+                        .font(.system(size: 70))
+                        .foregroundColor(element.isMatched ? .green : .blue)
+                        .shadow(radius: 3)
+                        .position(element.currentPosition)
+                        .offset(draggedID == element.id ? dragOffset : .zero)
+                        .disabled(element.isMatched)
+                        .gesture(
+                            DragGesture()
+                                .onChanged { value in
+                                    guard !element.isMatched else { return }
+                                    draggedID = element.id
+                                    dragOffset = value.translation
+                                }
+                                .onEnded { value in
+                                    guard !element.isMatched else { return }
+                                     
+                                    // Calcular posición real donde se soltó respecto al origen
+                                    let finalX = element.initialPosition.x + value.translation.width
+                                    let finalY = element.initialPosition.y + value.translation.height
+                                     
+                                    // Calcular distancia a la sombra
+                                    let distance = hypot(finalX - element.targetPosition.x, finalY - element.targetPosition.y)
+                                     
+                                    // Margen de tolerancia (ej. 50 puntos)
+                                    if distance < 50 {
+                                        // ¡Acierto! Imantamos a la posición exacta de la sombra sin penalizar errores
+                                        element.currentPosition = element.targetPosition
+                                        element.initialPosition = element.targetPosition
+                                        element.isMatched = true
+                                         
+                                        checkIfGameIsFinished()
+                                    } else {
+                                        // Si falla, simplemente se queda el gesto y regresa suavemente al origen
+                                        // (al resetear el offset el sistema lo regresa a currentPosition)
+                                    }
+                                     
+                                    draggedID = nil
+                                    dragOffset = .zero
+                                }
+                        )
+                }
+                 
+                // Alerta de nivel completado (Sin presión de errores)
+                if gameCompleted {
+                    VStack(spacing: 12) {
+                        Text("¡Excelente trabajo!")
+                            .font(.largeTitle)
+                            .bold()
+                            .foregroundColor(.white)
+                        Text("Has completado todas las figuras con éxito.")
+                            .foregroundColor(.white)
+                    }
+                    .padding(24)
+                    .background(Color.black.opacity(0.85))
+                    .cornerRadius(16)
+                    .shadow(radius: 10)
+                }
             }
         }
-}
-// Preview corregido (sin parámetros vacíos que daban error)
-struct Pareja_Previews: PreviewProvider {
-    static var previews: some View {
-        parejas()
+        .onAppear {
+            cargarDetallesNivel()
+        }
+        .navigationTitle("Nivel \(numeroNivel)")
+        .navigationBarTitleDisplayMode(.inline)
+    }
+    
+    // Función para consumir el Web Service de C#
+    func cargarDetallesNivel() {
+        APIService.shared.detalles_niveles_match_shadow(id_nivel: idNivel, numero_nivel: numeroNivel) { detalles, error in
+            isLoading = false
+            if let error = error {
+                errorMessage = error
+                return
+            }
+            
+            if let detalles = detalles {
+                // Mapeamos los datos de la base de datos a nuestros elementos interactivos
+                self.elements = detalles.map { item in
+                    let target = CGPoint(x: item.coordenada_sombra_x, y: item.coordenada_sombra_y)
+                    let initial = CGPoint(x: item.coordenada_ficha_x, y: item.coordenada_ficha_y)
+                    return ElementoJuego(
+                        nombre: item.nombre_figura,
+                        systemImage: item.icono,
+                        targetPosition: target,
+                        initialPosition: initial,
+                        currentPosition: initial
+                    )
+                }
+            }
+        }
+    }
+
+    func checkIfGameIsFinished() {
+        if !elements.isEmpty && elements.allSatisfy({ $0.isMatched }) {
+            gameCompleted = true
+            // Aquí en el futuro puedes disparar un guardado de puntuación limpia o avanzar de nivel
+        }
     }
 }

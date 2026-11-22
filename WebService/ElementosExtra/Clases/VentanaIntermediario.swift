@@ -15,7 +15,7 @@ import SwiftUI
 
 struct VentanaIntermediario {
     @ViewBuilder
-    static func obtenerVentana(_ nombre: String?) -> some View {
+    static func obtenerVentana(_ nombre: String?,IdMinijuego: Int) -> some View {
         
         switch nombre {
             
@@ -23,7 +23,7 @@ struct VentanaIntermediario {
             VentanaDefault()
             
         case "VentanaMatchShadow" :
-            VentanaMatchShadow()
+            VentanaMatchShadow(IdMinijuego: IdMinijuego)
             
         default:
             VentanaDefault()

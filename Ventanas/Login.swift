@@ -96,7 +96,7 @@ struct Login: View {
                     EmptyView()
                 }
                 .hidden()
-            }
+            }.navigationTitle("Cerrar Sesion")
             .background(
                 Image("fondo1")
                     .resizable()

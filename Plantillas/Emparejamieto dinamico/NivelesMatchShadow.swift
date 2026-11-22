@@ -43,10 +43,19 @@ struct NivelesMatchShadow : View {
                         HStack{
                             Text("Dificultad : ")
                                 .foregroundColor(.black)
-                            Text("\(niveles?.dificultad ?? "no disponible")")
-                                .foregroundColor(.black)
-                            
-                            
+                            ForEach(0..<5)
+                            {
+                                i in
+                                if(i<(niveles?.dificultad ?? 0))
+                                {
+                                    Image(systemName: "star.fill")
+                                        .foregroundColor(.yellow)
+                                }else{
+                                    Image(systemName: "star.fill")
+                                        .foregroundColor(.gray)
+                                }
+                            }
+                
                         }
                         HStack{
                             Text("Estado: ")
@@ -69,7 +78,6 @@ struct NivelesMatchShadow : View {
                         .frame(width : 25, height: 30)
                         .foregroundColor(Color.green)
                 }
-                Divider()
             }
         }.padding()
     }
@@ -81,7 +89,7 @@ struct NivelesMatchShadow : View {
         numero_nivel: 1,
         id_minijuego: 1,
         titulo_nivel: "Nivel 1: Básicos",
-        dificultad: "Fácil",
+        dificultad: 2,
         estado: true
     ))
 }

@@ -8,7 +8,7 @@
 import Foundation
 
 nonisolated struct vConsultarMinijuego: Decodable, Sendable, Identifiable{
-    var id : Int {id_minijuego} // Essto funciona para decirle al menu (o swift) que cada elemento cuenta con id unico
+    var id : Int {id_minijuego} // Esto funciona para decirle al menu (o swift) que cada elemento cuenta con id unico
     let id_minijuego : Int
     let nombre_minijuego : String?
     let icono: String?

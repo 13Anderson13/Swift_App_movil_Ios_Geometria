@@ -73,4 +73,89 @@ class APIService {
             }
         }.resume()
     }
+    
+    //==============================================================
+    //FUNCIONES MATCH SHADOW
+    //==============================================================
+    
+    // -- Get(Selector de niveles)
+    
+    func niveles_match_shadow(id_minijuego: Int,completion: @escaping([vNivelesMatch]?, String?) -> Void)
+    {
+        var components = URLComponents(string: "\(APIConfig.baseURL)/NivelesMatchShadow/Niveles")
+            components?.queryItems = [
+                URLQueryItem(name: "id_minijuego", value: String(id_minijuego))
+            ]
+            
+            guard let url = components?.url else {
+                completion(nil, "URL Invalida")
+                return
+            }
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        URLSession.shared.dataTask(with: request) {data, response, error in
+            if let error = error {
+                DispatchQueue.main.async{
+                    completion(nil, error.localizedDescription)
+                }
+                return
+            }
+            
+            guard let data = data,
+                  let niveles_match = try? JSONDecoder().decode([vNivelesMatch].self, from: data)
+            else{
+                DispatchQueue.main.async {
+                    completion(nil, "Error al decodificar la respuesta del servidor")
+                }
+                return
+            }
+            
+            DispatchQueue.main.async{
+                completion (niveles_match, nil)
+            }
+        }.resume()
+    }
+    
+    // -- Get (Cargar elementos del nivel de MatchShadow)
+    
+    func detalles_niveles_match_shadow(id_nivel: Int,numero_nivel : Int ,completion: @escaping([vDetallesNivelesMatch]?, String?) -> Void)
+    {
+        var components = URLComponents(string: "\(APIConfig.baseURL)/NivelesMatchShadow/Detalles")
+            components?.queryItems = [
+                URLQueryItem(name: "id_nivel", value: String(id_nivel)),
+                URLQueryItem(name: "numero_nivel", value: String(numero_nivel))
+            ]
+            
+            guard let url = components?.url else {
+                completion(nil, "URL Invalida")
+                return
+            }
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        URLSession.shared.dataTask(with: request) {data, response, error in
+            if let error = error {
+                DispatchQueue.main.async{
+                    completion(nil, error.localizedDescription)
+                }
+                return
+            }
+            
+            guard let data = data,
+                  let detalles_match = try? JSONDecoder().decode([vDetallesNivelesMatch].self, from: data)
+            else{
+                DispatchQueue.main.async {
+                    completion(nil, "Error al decodificar la respuesta del servidor")
+                }
+                return
+            }
+            
+            DispatchQueue.main.async{
+                completion (detalles_match, nil)
+            }
+        }.resume()
+    }
 }

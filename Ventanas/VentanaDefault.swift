@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct VentanaDefault : View {
+    @Environment(\.dismiss) var dismiss
     var body : some View {
         VStack(alignment : .center, spacing: 16){
             Text("Minijuego no encontrado")
@@ -28,17 +29,23 @@ struct VentanaDefault : View {
                 .bold()
                 
             Button(action:{
-                //dismiss()
+                dismiss()
             })
             {
                 Text("Regresar")
                     .bold()
                     .frame(maxWidth: .infinity)
-                    .padding(.vertical, 15)
-                    .background(Color.blue)
+                    .padding(.vertical, 10)
+                    .background(
+                        LinearGradient(
+                            colors: [.blue, .purple],
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
+                    )
                     .foregroundColor(.white)
                     .cornerRadius(8)
-            }
+            }.padding()
             
             Text("Si el problema persiste, ponte en contacto con el equipo de soporte")
                 .multilineTextAlignment(.center)
